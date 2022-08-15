@@ -26,7 +26,7 @@ jobs:
         sudo apt-get install git        
     - name: sync
       run: |
-        git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
+        git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
         cd android_packages_modules_NetworkStack
         git remote -v
         git remote add upstream https://android.googlesource.com/platform/packages/modules/NetworkStack
