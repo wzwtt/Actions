@@ -41,7 +41,7 @@ jobs:
         sudo apt-get install git 
     - name: sync    
       run: |
-        echo ${{ env.TAG }}
+        echo "${{ env.TAG }}"
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
         cd android_packages_modules_NetworkStack
         git remote -v
