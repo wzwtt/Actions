@@ -1,1 +1,49 @@
 
+name: fork android_packages_modules_NetworkStack from Google
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'lineage version'
+        required: true
+        default: 'lineage-19.1'
+      tag:
+        description: 'AOSP tag'
+        required: true
+        default: 'android-12.1.0_rxx'
+        
+env:
+  EMAIL: wzwttol@outlook.com
+  USER: wzwtt
+        
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Initialization environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install git        
+    - name: sync
+      run: |
+        git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
+        cd android_packages_modules_NetworkStack
+        git remote -v
+        git remote add upstream https://android.googlesource.com/platform/packages/modules/NetworkStack
+        git remote -v
+        git checkout ${{ github.event.inputs.tag }}
+        git branch -d ${{ github.event.inputs.version }}
+        git branch ${{ github.event.inputs.version }} ${{ github.event.inputs.tag }}
+        git checkout ${{ github.event.inputs.version }}
+        sed -i 's#http://connectivitycheck.gstatic.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+        sed -i 's#https://www.google.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+        sed -i 's#http://www.google.com/gen_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+        sed -i 's#http://play.googleapis.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+    - name: push
+      run: |
+        git config --global user.email $EMAIL
+        git config --global user.name $USER
+        git add .
+        git commit -m "204 server" -a
+        git push -u origin ${{ github.event.inputs.version }} --force
+  
