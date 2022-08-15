@@ -15,6 +15,8 @@ env:
 jobs:
   get_tag_name:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.gettag.outputs.out }}
     steps:
     - name: Initialization environment
       run: |
@@ -28,9 +30,12 @@ jobs:
         str=${str#*tags/}
         str=${str%%\"*}
         echo "TAG=$str"
-
-        echo "TAG=hello" >> $GITHUB_ENV
+        echo "TAG=$str" >> $GITHUB_ENV
+    - name: output
+      id: gettag
+      run: |
         echo "${{ env.TAG }}"
+        echo "::set-output name=out::${{ env.TAG }}"
         
   android_packages_modules_NetworkStack:
     runs-on: ubuntu-latest
@@ -42,16 +47,16 @@ jobs:
         sudo apt-get install git 
     - name: sync    
       run: |
-        echo "${{ env.TAG }}"
+        echo "${{needs.get_tag_name.outputs.tag}}"
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
         cd android_packages_modules_NetworkStack
         git remote -v
         git remote add upstream https://android.googlesource.com/platform/packages/modules/NetworkStack
         git remote -v
         git fetch upstream
-        git checkout ${{ env.TAG }}
+        git checkout ${{needs.get_tag_name.outputs.tag}}
         git branch -d ${{ github.event.inputs.version }}
-        git branch ${{ github.event.inputs.version }} ${{ env.TAG }}
+        git branch ${{ github.event.inputs.version }} ${{needs.get_tag_name.outputs.tag}}
         git checkout ${{ github.event.inputs.version }}
         sed -i 's#http://connectivitycheck.gstatic.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
         sed -i 's#https://www.google.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
