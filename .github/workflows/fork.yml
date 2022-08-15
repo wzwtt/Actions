@@ -1,14 +1,12 @@
 
 name: fork from upstream and change
 on: 
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'lineage version'
-        required: true
-        default: 'lineage-19.1'
-        
+  repository_dispatch:
+    types:
+      - webhook-1
+      
 env:
+  VERSION: lineage-19.1
   EMAIL: wzwttol@outlook.com
   USER: wzwtt
         
@@ -55,9 +53,9 @@ jobs:
         git remote -v
         git fetch upstream
         git checkout ${{needs.get_tag_name.outputs.tag}}
-        git branch -d ${{ github.event.inputs.version }}
-        git branch ${{ github.event.inputs.version }} ${{needs.get_tag_name.outputs.tag}}
-        git checkout ${{ github.event.inputs.version }}
+        git branch -d $VERSION
+        git branch $VERSION ${{needs.get_tag_name.outputs.tag}}
+        git checkout $VERSION
         sed -i 's#http://connectivitycheck.gstatic.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
         sed -i 's#https://www.google.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
         sed -i 's#http://www.google.com/gen_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
@@ -69,7 +67,7 @@ jobs:
         git config --global user.name $USER
         git add .
         git commit -m "204 server" -a
-        git push -u origin ${{ github.event.inputs.version }} --force
+        git push -u origin $VERSION --force
         
   Lineage-official:
     runs-on: ubuntu-latest
@@ -91,8 +89,8 @@ jobs:
         git remote add upstream https://github.com/LineageOS/${{ matrix.repo }}.git
         git remote -v
         git fetch upstream
-        git checkout ${{ github.event.inputs.version }}
-        git merge upstream/${{ github.event.inputs.version }}
+        git checkout $VERSION
+        git merge upstream/$VERSION
         git push
         
   baunilla:
@@ -115,7 +113,7 @@ jobs:
         git remote add upstream https://github.com/baunilla/${{ matrix.repo }}.git
         git remote -v
         git fetch upstream
-        git checkout ${{ github.event.inputs.version }}
-        git merge upstream/${{ github.event.inputs.version }}
+        git checkout $VERSION
+        git merge upstream/$VERSION
         git push
         
