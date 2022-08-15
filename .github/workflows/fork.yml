@@ -1,0 +1,108 @@
+
+name: fork from upstream and change
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'lineage version'
+        required: true
+        default: 'lineage-19.1'
+        
+env:
+  EMAIL: wzwttol@outlook.com
+  USER: wzwtt
+        
+jobs:
+  get_tag_name:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Initialization environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install git        
+    - name: get_tag
+      run: |
+        git clone https://github.com/wzwtt/android.git
+        cd android
+        str=$(cat default.xml)
+        str=${str#*tags/}
+        str=${str%%\"*}
+        echo "tag=_$str" >> $GITHUB_ENV
+        
+  android_packages_modules_NetworkStack:
+    runs-on: ubuntu-latest
+    needs: get_tag_name
+    steps:
+    - name: Initialization environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install git 
+    - name: sync    
+      runs: |
+        git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
+        cd android_packages_modules_NetworkStack
+        git remote -v
+        git remote add upstream https://android.googlesource.com/platform/packages/modules/NetworkStack
+        git remote -v
+        git fetch upstream
+        git checkout ${{ env.tag }}
+        git branch -d ${{ github.event.inputs.version }}
+        git branch ${{ github.event.inputs.version }} ${{ env.tag }}
+        git checkout ${{ github.event.inputs.version }}
+        sed -i 's#http://connectivitycheck.gstatic.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+        sed -i 's#https://www.google.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+        sed -i 's#http://www.google.com/gen_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+        sed -i 's#http://play.googleapis.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
+    - name: push
+      run: |
+        cd android_packages_modules_NetworkStack
+        git config --global user.email $EMAIL
+        git config --global user.name $USER
+        git add .
+        git commit -m "204 server" -a
+        git push -u origin ${{ github.event.inputs.version }} --force
+        
+  Lineage-official:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [android_frameworks_base, android_packages_apps_Updater]
+    steps:
+    - name: Initialization environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install git 
+    - name: sync    
+      runs: |
+        git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
+        cd ${{ matrix.repo }}
+        git remote -v
+        git remote add upstream https://github.com/LineageOS/${{ matrix.repo }}.git
+        git remote -v
+        git fetch upstream
+        git checkout ${{ github.event.inputs.version }}
+        git merge upstream/${{ github.event.inputs.version }}
+        git push
+        
+  baunilla:
+  runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [android_device_xiaomi_rosy]
+    steps:
+    - name: Initialization environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install git 
+    - name: sync    
+      runs: |
+        git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
+        cd ${{ matrix.repo }}
+        git remote -v
+        git remote add upstream https://github.com/baunilla/${{ matrix.repo }}.git
+        git remote -v
+        git fetch upstream
+        git checkout ${{ github.event.inputs.version }}
+        git merge upstream/${{ github.event.inputs.version }}
+        git push
+        
