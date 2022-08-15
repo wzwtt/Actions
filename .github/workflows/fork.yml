@@ -28,7 +28,7 @@ jobs:
         str=${str#*tags/}
         str=${str%%\"*}
         echo "TAG=$str"
-        echo "TAG=_$str" >> $GITHUB_ENV
+        echo "TAG=$str" >> $GITHUB_ENV
         echo "${{ env.TAG }}"
         
   android_packages_modules_NetworkStack:
