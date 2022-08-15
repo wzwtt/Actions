@@ -42,6 +42,7 @@ jobs:
         sed -i 's#http://play.googleapis.com/generate_204#http://www.gstatic.com/generate_204#g' res/values/config.xml
     - name: push
       run: |
+        cd android_packages_modules_NetworkStack
         git config --global user.email $EMAIL
         git config --global user.name $USER
         git add .
