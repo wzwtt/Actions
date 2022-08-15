@@ -31,6 +31,7 @@ jobs:
         git remote -v
         git remote add upstream https://android.googlesource.com/platform/packages/modules/NetworkStack
         git remote -v
+        git fetch upstream
         git checkout ${{ github.event.inputs.tag }}
         git branch -d ${{ github.event.inputs.version }}
         git branch ${{ github.event.inputs.version }} ${{ github.event.inputs.tag }}
