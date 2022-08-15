@@ -38,7 +38,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install git 
     - name: sync    
-      runs: |
+      run: |
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
         cd android_packages_modules_NetworkStack
         git remote -v
@@ -73,7 +73,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install git 
     - name: sync    
-      runs: |
+      run: |
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
         cd ${{ matrix.repo }}
         git remote -v
@@ -95,7 +95,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install git 
     - name: sync    
-      runs: |
+      run: |
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
         cd ${{ matrix.repo }}
         git remote -v
