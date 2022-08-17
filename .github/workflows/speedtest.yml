@@ -1,15 +1,30 @@
 name: SpeedTest
 on: 
   workflow_dispatch:
+    inputs:
+      software:
+        description: "Speedtest software"
+        required: true
+        default: "Ookla"
+        type: choice
+        options:
+        - Ookla
+        - Python
         
 jobs:
   SpeedTest:
     runs-on: ubuntu-latest
     steps:
-    - name: Initialization environment
+    - name: speedtest-cli
+      if: ${{ github.event.inputs.software == 'Python' }}
       run: |
         sudo pip install speedtest-cli
-    - name: Test
-      run: |
         speedtest-cli
+    - name: Install Speedtest by Ookla
+      if: ${{ github.event.inputs.software == 'Ookla' }}
+      run: |
+        sudo apt-get install curl
+        curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
+        sudo apt-get install speedtest
+        speedtest
         
