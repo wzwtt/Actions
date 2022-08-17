@@ -20,11 +20,11 @@ jobs:
       run: |
         sudo pip install speedtest-cli
         speedtest-cli
-    - name: Install Speedtest by Ookla
+    - name: Speedtest by Ookla
       if: ${{ github.event.inputs.software == 'Ookla' }}
       run: |
         sudo apt-get install curl
         curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
         sudo apt-get install speedtest
-        speedtest
+        speedtest --accept-license
         
