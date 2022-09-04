@@ -23,7 +23,7 @@ jobs:
         sudo apt-get install git        
     - name: get_tag
       run: |
-        git clone https://github.com/wzwtt/android.git
+        git clone https://github.com/wzwtt/android.git -b $VERSION
         cd android
         str=$(cat default.xml)
         str=${str#*tags/}
