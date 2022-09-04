@@ -7,7 +7,7 @@ on:
       - webhook-1
       
 env:
-  VERSION: lineage-20.0
+  VERSION: ${{ github.event.client_payload.version }}
   EMAIL: wzwttol@outlook.com
   USER: wzwtt
         
@@ -23,6 +23,7 @@ jobs:
         sudo apt-get install git        
     - name: get_tag
       run: |
+        echo $VERSION
         git clone https://github.com/wzwtt/android.git -b $VERSION
         cd android
         str=$(cat default.xml)
