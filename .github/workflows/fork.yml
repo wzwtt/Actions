@@ -7,7 +7,7 @@ on:
       - webhook-1
       
 env:
-  VERSION: lineage-19.1
+  VERSION: lineage-20.0
   EMAIL: wzwttol@outlook.com
   USER: wzwtt
         
