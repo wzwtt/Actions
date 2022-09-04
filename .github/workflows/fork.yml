@@ -50,6 +50,7 @@ jobs:
         echo "${{needs.get_tag_name.outputs.tag}}"
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/android_packages_modules_NetworkStack.git
         cd android_packages_modules_NetworkStack
+        git checkout $VERSION
         git remote -v
         git remote add upstream https://android.googlesource.com/platform/packages/modules/NetworkStack
         git remote -v
@@ -87,6 +88,7 @@ jobs:
         git config --global user.name $USER
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
         cd ${{ matrix.repo }}
+        git checkout $VERSION
         git remote -v
         git remote add upstream https://github.com/LineageOS/${{ matrix.repo }}.git
         git remote -v
@@ -111,6 +113,7 @@ jobs:
         git config --global user.name $USER
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
         cd ${{ matrix.repo }}
+        git checkout $VERSION
         git remote -v
         git remote add upstream https://github.com/baunilla/${{ matrix.repo }}.git
         git remote -v
