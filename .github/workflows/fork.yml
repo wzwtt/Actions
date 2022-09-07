@@ -16,11 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.gettag.outputs.out }}
-    steps:
-    - name: Initialization environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install git        
+    steps:      
     - name: get_tag
       run: |
         echo $VERSION
@@ -41,10 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: get_tag_name
     steps:
-    - name: Initialization environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install git 
     - name: sync    
       run: |
         echo "${{needs.get_tag_name.outputs.tag}}"
@@ -78,10 +70,6 @@ jobs:
       matrix:
         repo: [android_frameworks_base, android_packages_apps_Updater]
     steps:
-    - name: Initialization environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install git 
     - name: sync    
       run: |
         git config --global user.email $EMAIL
@@ -97,16 +85,13 @@ jobs:
         git merge upstream/$VERSION
         git push
         
-  baunilla:
+  device:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         repo: [android_device_xiaomi_rosy]
+        user: [NFS-Project]
     steps:
-    - name: Initialization environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install git 
     - name: sync    
       run: |
         git config --global user.email $EMAIL
@@ -115,7 +100,7 @@ jobs:
         cd ${{ matrix.repo }}
         git checkout $VERSION
         git remote -v
-        git remote add upstream https://github.com/baunilla/${{ matrix.repo }}.git
+        git remote add upstream https://github.com/${{ matrix.user }}/${{ matrix.repo }}.git
         git remote -v
         git fetch upstream
         git checkout $VERSION
