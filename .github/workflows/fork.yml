@@ -88,11 +88,11 @@ jobs:
   device:
     runs-on: ubuntu-latest
     env:
-      branch: "13.0"
+      branch: $VERSION
     strategy:
       matrix:
         repo: [android_device_xiaomi_rosy]
-        user: [NFS-Project]
+        user: [baunilla]
     steps:
     - name: sync    
       run: |
