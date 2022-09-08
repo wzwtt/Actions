@@ -87,8 +87,6 @@ jobs:
         
   device:
     runs-on: ubuntu-latest
-    env:
-      branch: $VERSION
     strategy:
       matrix:
         repo: [android_device_xiaomi_rosy]
@@ -100,12 +98,12 @@ jobs:
         git config --global user.name $USER
         git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
         cd ${{ matrix.repo }}
-        git checkout $branch
+        git checkout $VERSION
         git remote -v
         git remote add upstream https://github.com/${{ matrix.user }}/${{ matrix.repo }}.git
         git remote -v
         git fetch upstream
-        git checkout $branch
-        git merge upstream/$branch
+        git checkout $VERSION
+        git merge upstream/$VERSION
         git push
         
