@@ -125,6 +125,8 @@ jobs:
         git remote add upstream https://github.com/${{ matrix.user }}/${{ matrix.repo }}.git
         git remote -v
         git fetch upstream
+        git checkout -b temp upstream/lineage-21
         git checkout $VERSION
-        git merge upstream/$VERSION
+        git merge temp
+        git branch -d temp
         git push
