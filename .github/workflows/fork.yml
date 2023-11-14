@@ -85,7 +85,7 @@ jobs:
         git merge upstream/$VERSION
         git push
         
-  device:
+  rosy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -106,4 +106,25 @@ jobs:
         git checkout $VERSION
         git merge upstream/$VERSION
         git push
-        
+
+  gauguin:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [android_device_xiaomi_gauguin]
+        user: [xiaomi-sm7225]
+    steps:
+    - name: sync    
+      run: |
+        git config --global user.email $EMAIL
+        git config --global user.name $USER
+        git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/wzwtt/${{ matrix.repo }}.git
+        cd ${{ matrix.repo }}
+        git checkout $VERSION
+        git remote -v
+        git remote add upstream https://github.com/${{ matrix.user }}/${{ matrix.repo }}.git
+        git remote -v
+        git fetch upstream
+        git checkout $VERSION
+        git merge upstream/$VERSION
+        git push
